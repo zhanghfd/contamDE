@@ -1,6 +1,6 @@
 Package: contamDE
 Type: Package
-Title: DE analysis with contaminated tumor samples
+Title: DE analysis using RNA-seq data from contaminated tumor samples
 Version: 2.0
 Author: Qi Shen, Jiyuan Hu, Yifan Ji, Hong Zhang
 Maintainer: Hong Zhang <zhangh@ustc.edu.cn>
