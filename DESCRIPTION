@@ -1,20 +1,15 @@
 Package: contamDE
 Type: Package
-Title: DE analysis with heterogeneous tumor samples
-Version: 1.0
-Date: 2014-11-16
-Author: Qi Shen, Jiyuan Hu, Hong Zhang
-Maintainer: Hong Zhang <zhangh@fudan.edu.cn>
-Depends:
-    R (>= 2.10),
-    edgeR,
-    nloptr
-Description: contamDE is an R package for identifying differentially expressed
-    genes between heterogeneous tumor samples and matched or unmatched normal
-    samples under 2 or more conditions.
+Title: DE analysis with contaminated tumor samples
+Version: 2.0
+Author: Qi Shen, Jiyuan Hu, Yifan Ji, Hong Zhang
+Maintainer: Hong Zhang <zhangh@ustc.edu.cn>
+Description: contamDE is an R package for identifying differentially expressed genes using RNA-seq data from contaminated tumor samples.
 License: GPL (>= 2)
-LazyLoad: yes
-Packaged: 2015-01-13 12:19:52 UTC; admin
-RoxygenNote: 5.0.1
+Encoding: UTF-8
+LazyData: yes
+Imports: edgeR, limma, mgcv, nloptr, statmod
+Depends: R (>= 2.10)
+RoxygenNote: 6.1.1
 URL: http://github.com/zhanghfd/contamDE
 BugReports: http://github.com/zhanghfd/contamDE/issues

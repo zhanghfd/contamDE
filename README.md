@@ -1,12 +1,11 @@
 # contamDE
-contamDE: Differential expression analysis of RNA-seq data for contaminated tumor samples
 
-The R package ‘contamDE’ conducts differential expression (DE) analysis using high throughput next-generation RNA-seq read count data generated from contaminated tumor samples that are either matched or unmatched with normal samples, which estimates the proportion of pure tumor cells in each contaminated tumor sample, and provides tumor vs. normal log2-fold change, likelihood ratio test statistic and p-value of DE analysis for each gene.
+The R package ‘contamDE’ conducts differential expression (DE) analysis using high throughput next-generation RNA-seq read count data generated from contaminated tumor samples and normal samples. Two methods are implemented in this R package, one is contamDE (Shen et al., 2016) and the other is contamDE-lm (Ji et al., 2019). 
 
-The manual file is "contamDE-manual.pdf". 
+Installation of the R package ‘contamDE’ in R:
 
-Installation of contamDE in R:
+> devtools::install_github('zhanghfd/contamDE');
 
-> library(‘devtools’);
+SHEN Qi, HU Jiyuan, JIANG Ning, HU Xiaohua, LUO Zewei, and ZHANG Hong (2016) contamDE: Differential expression analysis of RNA-seq data for contaminated tumor samples. Bioinformatics 32(5): 705-712.
 
-> install_github(‘zhanghfd/contamDE’);
+JI Yifan, YU Chang, and ZHANG Hong (2019) contamDE-lm: A linear model for differential gene expression analysis using next generation RNA-seq data from contaminated tumor samples.
