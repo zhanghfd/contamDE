@@ -37,7 +37,7 @@ contamDE.lm.test(d,H,b=NULL)
     d <- contamDE.lm(simcounts,subtype=subtype);
 
     # overall DE analysis between the tumors and the normal
-    H <- diag(0,3);
+    H <- diag(3);
     d1 <- contamDE.lm.test(d,H);
 
     # "subtype 2 versus normal" DE analysis
