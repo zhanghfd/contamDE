@@ -27,7 +27,7 @@ Maintainer: Hong Zhang <zhangh@ustc.edu.cn>
 \references{
 SHEN Qi, HU Jiyuan, JIANG Ning, HU Xiaohua, LUO Zewei, and ZHANG Hong (2016) contamDE: Differential expression analysis of RNA-seq data for contaminated tumor samples. Bioinformatics 32(5): 705-712.
 
-JI Yifan, YU Chang, and ZHANG Hong (2019) contamDE-lm: Linear model based differential gene expression analysis using next generation RNA-seq data from contaminated tumor samples
+JI Yifan, YU Chang, and ZHANG Hong (2019) contamDE-lm: Linear model based differential gene expression analysis using next-generation RNA-seq data from contaminated tumor samples
 }
 
 \keyword{ package }

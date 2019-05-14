@@ -65,7 +65,7 @@ contamDE.lm(counts, subtype=NULL, covariate=NULL, is.contaminated=TRUE, robust =
 }
 
 \references{
-JI Yifan, YU Chang, and ZHANG Hong (2019) contamDE-lm: Linear model based differential gene expression analysis using next generation RNA-seq data from contaminated tumor samples.
+JI Yifan, YU Chang, and ZHANG Hong (2019) contamDE-lm: Linear model based differential gene expression analysis using next-generation RNA-seq data from contaminated tumor samples.
 }
 
 
