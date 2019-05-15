@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<title>Introduction to contamDE</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to contamDE</h1>
+
+
+
+<div id="package-description" class="section level1">
+<h1>1. Package description</h1>
+<p>The R package <strong>contamDE</strong> implements two powerful statistical methods (i.e., <em>contamDE</em> and <em>contamDE-lm</em>) for differential expression analysis using next-generation RNA-seq data from contaminated tumor samples, which account for the contamination of the tumor samples.</p>
+</div>
+<div id="the-first-method-contamde" class="section level1">
+<h1>2 The first method <em>contamDE</em></h1>
+<div id="description-of-contamde" class="section level2">
+<h2>2.1 Description of <em>contamDE</em></h2>
+<p>This method can analyze both contaminated matched data with a single or multiple tumor cell types and unmatched data based on negative binomial model.</p>
+In the matched situation, the data for each normal-tumor matched samples are <span class="math inline">\((N_{ij},T_{ij})\)</span>, where <span class="math inline">\(N_{ij}\)</span> and <span class="math inline">\(T_{ij}\)</span> are the numbers of the RNA-seq reads mapped to the <span class="math inline">\(j\)</span>th gene for the <span class="math inline">\(i\)</span>th normal and tumor cell sample respectively. Suppose tumor cell sample consists of a proportion of <span class="math inline">\(w_i\)</span> tumor cells and a proportion of <span class="math inline">\(1-w_i\)</span> normal cells, then the model for contaminated and matched samples with a common dispersion <span class="math inline">\(\phi_j\)</span> and mean parameter of normal samples <span class="math inline">\(\mu_j\)</span> is as follows:
+<span class="math display">\[\begin{eqnarray*}
+&amp;&amp;N_{ij} \sim NB(\kappa_i\mu_je^{\alpha_{ij}},\phi_j),\\
+&amp;&amp;T_{ij} \sim NB(\kappa'_i(\mu_j+w_i\delta_j)e^{\alpha_{ij}},\phi_j),
+\end{eqnarray*}\]</span>
+<p>where <span class="math inline">\(\kappa_i\)</span> and <span class="math inline">\(\kappa'_i\)</span> are size factors for normal and tumor samples; <span class="math inline">\(\alpha_{ij}\)</span> are the fixed effects used to model the correlation between the <span class="math inline">\(i\)</span>th paired sample; <span class="math inline">\(\delta_j\)</span> is the mean expression difference between tumors and normals which corresponds to <span class="math inline">\(\delta_j=\mu'_j-\mu_j\)</span> respectively.</p>
+The likelihood ratio test can be conducted for testing null hypotheses <span class="math inline">\(H_j:\delta_j=0\)</span> and the fold change can be estimated according to the relationship
+<span class="math display">\[\begin{eqnarray*}
+&amp;&amp; FC_j=\hat{\delta}_j/\hat{\mu}_j+1
+\end{eqnarray*}\]</span>
+In the unmatched situation, the model is slightly simpler:
+<span class="math display">\[\begin{eqnarray*}
+&amp;&amp;N_{ij} \sim NB(\kappa_i\mu_j,\phi_j),\\
+&amp;&amp;T_{i'j} \sim NB(\kappa'_{i'}(\mu_j+w_i\delta_j),\phi_j).
+\end{eqnarray*}\]</span>
+</div>
+<div id="illustration-of-contamde" class="section level2">
+<h2>2.2 Illustration of <em>contamDE</em></h2>
+<div id="matched-samples" class="section level3">
+<h3>2.2.1 Matched samples</h3>
+<p>We use the dataset <em>prostate</em> contained for illustration.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;prostate&quot;</span>,<span class="dt">package=</span><span class="st">&quot;contamDE&quot;</span>)
+<span class="kw">dim</span>(prostate)</code></pre></div>
+<pre><code>## [1] 12698    29</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(prostate)</code></pre></div>
+<pre><code>##   nameOfGene N1 N2 N3 N4 N5 N6 N7 N8 N9 N10 N11 N12 N13 N14 T1 T2 T3 T4 T5
+## 1      KRT36  1 13  4  0 51  1  3  0  3   0   2   0  13   1  0  2  0  0  0
+## 2  KRTAP13-2  2  0  0  0  0  5  3  0 68   0   0   7   0   1  0  0  2  0  0
+## 3       LGR5  3  1 11  3  0  4  0  2  0   0  12  11   0  64  4  2  5  0  0
+## 4      SMR3B  7  0  0  0  0  0  0  0  0  57   0  40   0   0 26  0  0  1  0
+## 5       CST4  3  4 62  8  0  2  1  5 17  15   1   6   2   6  1  0  0  3  1
+## 6     RNF186  1  3 10  0 53  1  1  4  0   0  20  12  20  11  0  1  1  1  1
+##   T6 T7 T8 T9 T10 T11 T12 T13 T14
+## 1  1  0  0  0   0   0   0   0   0
+## 2  4  3  0  0   0   1   1   0   0
+## 3  2  1  0  1   0   0   2   2   2
+## 4  1  0  0  0   0   0   0   0   0
+## 5  1  4  2  0   3   0   3   0   5
+## 6  4  0  1  0   0   5   4   5   0</code></pre>
+<p>This dataset contains the read counts of 12699 genes for prostate cancer samples and adjacent normal cells samples provided by 14 patients from Shanghai Changhai Hospital. Suppose we are interested in the differential expression of genes between two matched samples.</p>
+<p>The R script for analyzing the data is as follows:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">contamDE</span>(prostate[,<span class="op">-</span><span class="dv">1</span>],<span class="dt">R=</span><span class="dv">2</span>,<span class="dt">match=</span><span class="ot">TRUE</span>)</code></pre></div>
+<p>The result is a list containing the following elements:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(d)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## [1] &quot;W&quot;  &quot;LR&quot;</code></pre></div>
+<p>The estimated purity proportion (saled to have mean 1) are</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d<span class="op">$</span>W</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## [1] 1.3078678 0.8623965 1.0131880 1.0174180 1.2064407 0.5894919 1.1149573 
+## [2] 0.9509469 1.1295711 1.2578447 0.7663290 0.6022404 1.2513781 0.9299297</code></pre></div>
+<p>The DE analysis results for the first 6 genes</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(d<span class="op">$</span>LR)</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">##             lrt      p.value      logFC
+## [1,] 21.8686383 2.919668e-06 -1.7268079
+## [2,]  2.4070003 1.207936e-01 -0.8302164
+## [3,]  2.7050280 1.000323e-01 -0.6706763
+## [4,]  0.1693806 6.806629e-01 -0.3048375
+## [5,]  9.3975734 2.172728e-03 -1.2926252
+## [6,] 16.7616779 4.238062e-05 -1.5243291</code></pre></div>
+</div>
+<div id="unmatched-samples" class="section level3">
+<h3>2.3.2 Unmatched samples</h3>
+<p>We use dataset <em>drosophila</em> for illustration.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;drosophila&quot;</span>,<span class="dt">package=</span><span class="st">&quot;contamDE&quot;</span>)
+<span class="kw">dim</span>(drosophila)</code></pre></div>
+<pre><code>## [1] 7196    8</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(drosophila)</code></pre></div>
+<pre><code>##    nameOfGene CT.PA.1 CT.PA.2 CT.SI.5 CT.SI.7 KD.PA.3 KD.SI.6 KD.PA.4
+## 1 FBgn0000008      76      71     137      82      87      68     115
+## 2 FBgn0000017    3498    3087    7014    3926    3029    3264    4322
+## 3 FBgn0000018     240     306     613     485     288     307     528
+## 4 FBgn0000032     611     672    1479    1351     694     757    1361
+## 5 FBgn0000042   40048   49144   97565   99372   70574   72850   95760
+## 6 FBgn0000043   15910   18194   34171   29671   31086   34085   42389</code></pre>
+<p>This dataset consists of the RNA-seq read counts of 7196 genes for 7 unmatched samples of Drosphila melanogaster S2 cells, of which 4 samples were untreated while 3 samples were treated. The R script for analyzing the data is as follows:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">contamDE</span>(drosophila[,<span class="op">-</span><span class="dv">1</span>],<span class="dt">R=</span><span class="dv">2</span>,<span class="dt">n=</span><span class="kw">list</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>,<span class="dv">5</span><span class="op">:</span><span class="dv">7</span>),<span class="dt">match=</span><span class="ot">FALSE</span>)</code></pre></div>
+<p>The estimated purity proportions (scaled to have maximal value 1) are</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d<span class="op">$</span>W</code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">## [1] 0.9743470 0.9818007 1.0438522</code></pre></div>
+<p>The DE analysis resutls for the first 6 genes are as follows:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">##               lrt      p.value        logFC
+## [1,] 2.177926e-05 0.9962764259  0.001030783
+## [2,] 1.959686e+00 0.1615468840 -0.256221146
+## [3,] 2.335351e-01 0.6289148683 -0.085454006
+## [4,] 2.098455e-01 0.6468885017 -0.087014070
+## [5,] 1.495160e+00 0.2214175509  0.242913855
+## [6,] 1.284316e+01 0.0003387145  0.618098952</code></pre></div>
+</div>
+</div>
+</div>
+<div id="the-second-method-contamde_lm" class="section level1">
+<h1>3. The second method <em>contamDE_lm</em></h1>
+<div id="description-of-contamde-lm" class="section level2">
+<h2>3.1 Description of <em>contamDE-lm</em></h2>
+<p>This method is also developed for DE analysis using RNA-seq data from contaminated tumor samples. This DE analysis procedure is based on a novel linear model and allows for pair-specific residual variances. Compared with <em>contamDE</em>, <em>contamDE-lm</em> is computationally much faster and statistically more robust, especially when the pair number is large, and it can additionally incorporate covariates.</p>
+The data for each normal-tumor matched samples are <span class="math inline">\((T_{ig},N_{ig})\)</span>, where <span class="math inline">\(T_{ig}\)</span> and <span class="math inline">\(N_{ig}\)</span> are the read counts of the <span class="math inline">\(g\)</span>th gene for the <span class="math inline">\(i\)</span>th normal sample and tumor cell sample, respectively. The novel linear model is specified as follows:
+<span class="math display">\[\begin{eqnarray*}
+&amp;&amp; y_{ig}=\log(\frac{T_{ig}}{\kappa_{iT}}+1)-\log(\frac{N_{ig}}{\kappa_{iN}}+1)=w_i(x_i^T\beta_g+z_i^T\gamma_g)+e_{ig}
+\end{eqnarray*}\]</span>
+<p>where <span class="math inline">\(y_{ig}\)</span> is a measure of expression difference between the tumor sample and the adjacent normal sample; <span class="math inline">\(\kappa_{iT}\)</span> and <span class="math inline">\(\kappa_{iN}\)</span> are the size factors of tumor and normal samples, respectively; <span class="math inline">\(x_i\)</span> is a 0-1 valued vector charactering tumor subtype; <span class="math inline">\(z_i\)</span> is a q-vector of covariates; <span class="math inline">\(\beta_g\)</span> are the log2-fold changes between tumor tissues and the normal; <span class="math inline">\(\gamma_g\)</span> are regression parameters for covariates; and <span class="math inline">\(w_i\)</span> are purity proportions.</p>
+<p>Various DE analysis problems can be conducted by specifying linear null hypotheses of the form <span class="math inline">\(H_0:H\beta_g=b\)</span>. For example, when detecting differentially expressed genes (DEGs) between the tumor and the normal, we ignore the subtype information (if any) and the hypothesis test problem can be formulated as <span class="math inline">\(H_0:\beta_g=0\)</span> which corresponds to <span class="math inline">\(H = 1\)</span>; when detecting DEGs between tumor subtype 1 and tumor subtype 2, we formulate the null hypothesis as <span class="math inline">\(H_0:\beta_{g1}=\beta_{g2}\)</span> which corresponds to <span class="math inline">\(H=(1,-1,0,\cdots,0)\)</span>; when detecting DEGs between any tumor subtype and the normal, we formulate the null hypothesis as <span class="math inline">\(H_0:\beta_{g1}=\cdots=\beta_{gp}=0\)</span> where <span class="math inline">\(p\)</span> is the subtype number, which corresponds to <span class="math inline">\(H=I_p\)</span>. In any of these examples, <span class="math inline">\(b=0\)</span>.</p>
+The F test statistic for <span class="math inline">\(H_0:H\beta_g=b\)</span> is
+<span class="math display">\[\begin{eqnarray*}
+&amp;&amp; F_g=(H\hat{\theta}_g-b)^T(H\hat{\Sigma}_gH^T)^{-1}(H\hat{\theta}_g-b)/r
+\end{eqnarray*}\]</span>
+<p>which approximately follows the F-distribution with degrees of freedom <span class="math inline">\(r\)</span> and <span class="math inline">\(d_0+d_g\)</span> under <span class="math inline">\(H_0\)</span>. Note that any two-sided t-test is equivalent to a F-test with the first degree of freedom being one.</p>
+</div>
+<div id="illustration-of-contamde.lm" class="section level2">
+<h2>3.2 Illustration of <em>contamDE.lm</em></h2>
+<p>We use dataset <em>simcounts</em> for illustration.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">data</span>(<span class="st">&quot;simcounts&quot;</span>)
+<span class="kw">dim</span>(simcounts)</code></pre></div>
+<pre><code>## [1] 10000    16</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(simcounts)</code></pre></div>
+<pre><code>##   Type1Normal1 Type1Normal2 Type1Normal3 Type1Normal4 Type2Normal1
+## 1         2249         1465         2564         1163         1408
+## 2         3649         4165        11399         3788         6075
+## 3          316          281          263          475         1195
+## 4         2030         5774         5292         3297         3864
+## 5           91           92          299          133          160
+## 6           67           19          119           14          114
+##   Type2Normal2 Type3Normal1 Type3Normal2 Type1Tumor1 Type1Tumor2
+## 1         1210          860         1611        1407        1531
+## 2         3528         1822         7375        3418        4267
+## 3          370          408         1367          69         164
+## 4         4951          794         8461        3030        6941
+## 5          120           93          164          65         110
+## 6           73           43           95         102          16
+##   Type1Tumor3 Type1Tumor4 Type2Tumor1 Type2Tumor2 Type3Tumor1 Type3Tumor2
+## 1        1231        4295        2808        1417        2726        4198
+## 2        3557       11479       14604        5573        8310       15949
+## 3         117        3138        2808         666          89        1726
+## 4        5570       38820       18996        3359        7410       21441
+## 5         149         469         432         110         185         492
+## 6          53         377         128          91          42         295</code></pre>
+<p>The dataset contains simulated RNA-Seq read counts for eight patients with both normal and tumor samples. The eight patients belong to three tumor subtypes (four ‘Type1’ patients, two ‘Type2’ patients, and two ‘Type3’ patients).</p>
+<div id="without-incorporating-subtype-information" class="section level3">
+<h3>3.2.1 Without incorporating subtype information</h3>
+<p>Suppose we are interested in differential analysis between the contaminated tumor samples and normal samples, then t-tests can be carried out:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d &lt;-<span class="st"> </span><span class="kw">contamDE.lm</span>(simcounts)</code></pre></div>
+<p>The result is a list containing the following elements:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(d)</code></pre></div>
+<pre><code>## [1] &quot;counts&quot;        &quot;p.contamDE.lm&quot; &quot;log2FC&quot;        &quot;log2FC.cov&quot;   
+## [5] &quot;proportion&quot;    &quot;design&quot;        &quot;df&quot;            &quot;weight&quot;       
+## [9] &quot;y&quot;</code></pre>
+<p>The correspong p-values for the first 6 genes are</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(d<span class="op">$</span>p.contamDE.lm)</code></pre></div>
+<pre><code>##      subtype-1 vs. normal
+## [1,]         2.565351e-03
+## [2,]         6.180637e-03
+## [3,]         8.978552e-01
+## [4,]         7.006808e-05
+## [5,]         2.158559e-03
+## [6,]         2.706327e-02</code></pre>
+<p>The estimated purity proportions (scaled to have maximal value 1) are</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d<span class="op">$</span>proportion</code></pre></div>
+<pre><code>## Type1Tumor1 Type1Tumor2 Type1Tumor3 Type1Tumor4 Type2Tumor1 Type2Tumor2 
+##   0.4067528   0.8861346   0.5380201   0.9639193   1.0000000   0.1542927 
+## Type3Tumor1 Type3Tumor2 
+##   0.6416266   0.9474743</code></pre>
+<p>The log2FCs (the log2 of fold changes) between two conditions (tumor and normal) are</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(d<span class="op">$</span>log2FC)</code></pre></div>
+<pre><code>##            [,1]
+## [1,] 0.84224717
+## [2,] 0.84963348
+## [3,] 0.07720014
+## [4,] 1.99192680
+## [5,] 0.93070709
+## [6,] 1.34051789</code></pre>
+</div>
+<div id="incorporating-subtype-information" class="section level3">
+<h3>3.2.2 Incorporating subtype information</h3>
+<p>The R scripts for DE analysis between any of three subtypes and the normal are as follows:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">subtype &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&quot;Type1&quot;</span>,<span class="dv">4</span>),<span class="kw">rep</span>(<span class="st">&quot;Type2&quot;</span>,<span class="dv">2</span>),<span class="kw">rep</span>(<span class="st">&quot;Type3&quot;</span>,<span class="dv">2</span>))
+d &lt;-<span class="st"> </span><span class="kw">contamDE.lm</span>(simcounts,subtype)
+<span class="kw">names</span>(d)</code></pre></div>
+<pre><code>## [1] &quot;counts&quot;        &quot;p.contamDE.lm&quot; &quot;log2FC&quot;        &quot;log2FC.cov&quot;   
+## [5] &quot;proportion&quot;    &quot;design&quot;        &quot;df&quot;            &quot;weight&quot;       
+## [9] &quot;y&quot;</code></pre>
+<p>The corresponding p-values for the first 6 genes are</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(d<span class="op">$</span>p.contamDE.lm)</code></pre></div>
+<pre><code>##      subtype-1 vs. normal subtype-2 vs. normal subtype-3 vs. normal
+## [1,]          0.042134852           0.27356835           0.02203106
+## [2,]          0.143430163           0.14678413           0.03125810
+## [3,]          0.461327059           0.47160778           0.21565058
+## [4,]          0.002098635           0.04750745           0.01110900
+## [5,]          0.039278335           0.10545812           0.06870435
+## [6,]          0.004599013           0.81536867           0.40552778</code></pre>
+<p>The estimated purity proportions (scaled to have maximal value 1) are</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">d<span class="op">$</span>proportion</code></pre></div>
+<pre><code>## Type1Tumor1 Type1Tumor2 Type1Tumor3 Type1Tumor4 Type2Tumor1 Type2Tumor2 
+##   0.4067528   0.8861346   0.5380201   0.9639193   1.0000000   0.1542927 
+## Type3Tumor1 Type3Tumor2 
+##   0.6416266   0.9474743</code></pre>
+<p>The estimated log2FCs for the first 6 genes are</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(d<span class="op">$</span>log2FC)</code></pre></div>
+<pre><code>##           [,1]       [,2]       [,3]
+## [1,] 0.7864610  0.5589565  1.1594353
+## [2,] 0.6035719  0.8956107  1.2305716
+## [3,] 0.6549043  0.8796657 -1.3821024
+## [4,] 2.1499433  1.6771908  1.9952982
+## [5,] 0.8887638  0.9505932  0.9848645
+## [6,] 2.6189108 -0.2359925  0.7463334</code></pre>
+</div>
+<div id="linear-hypothesis-testing" class="section level3">
+<h3>3.2.3 Linear hypothesis testing</h3>
+<p>The function <em>contamDE.lm.test</em> can be used to test linear hypotheses.</p>
+<p>The syntax of <em>contamDE.lm.test</em> is</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">contamDE.lm.test</span>(d,H,<span class="dt">b=</span><span class="ot">NULL</span>)</code></pre></div>
+<p>where <em>d</em> is a list returned by the function <em>contamDE.lm</em>, <em>H</em> is a r x (p+q) design matrix of rank r and <em>b</em> is a p vector.</p>
+<p>Example 1. If we have three subtypes and we are interested in DE analysis between these subtypes and the normal, the <span class="math inline">\(H\)</span> can be specified as a diagonal matrix:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">H &lt;-<span class="st"> </span><span class="kw">diag</span>(<span class="dv">3</span>)
+H</code></pre></div>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1    0    0
+## [2,]    0    1    0
+## [3,]    0    0    1</code></pre>
+<p>Example 2. If we are interested DE analysis between the first two subtyps, then <span class="math inline">\(H\)</span> is</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">H &lt;-<span class="st"> </span><span class="kw">matrix</span>(<span class="kw">c</span>(<span class="dv">1</span>,<span class="op">-</span><span class="dv">1</span>,<span class="dv">0</span>),<span class="dv">1</span>,<span class="dv">3</span>);
+H</code></pre></div>
+<pre><code>##      [,1] [,2] [,3]
+## [1,]    1   -1    0</code></pre>
+<p>The R scripts for exmple 1 are</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">subtype &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&quot;Type1&quot;</span>,<span class="dv">4</span>),<span class="kw">rep</span>(<span class="st">&quot;Type2&quot;</span>,<span class="dv">2</span>),<span class="kw">rep</span>(<span class="st">&quot;Type3&quot;</span>,<span class="dv">2</span>))
+d &lt;-<span class="st"> </span><span class="kw">contamDE.lm</span>(simcounts,subtype)
+H &lt;-<span class="st"> </span><span class="kw">diag</span>(<span class="dv">3</span>)
+d1 &lt;-<span class="st"> </span><span class="kw">contamDE.lm.test</span>(d,H)</code></pre></div>
+<p>The result is a list containing the following elements:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(d1)</code></pre></div>
+<pre><code>##  [1] &quot;counts&quot;             &quot;p.contamDE.lm&quot;      &quot;log2FC&quot;            
+##  [4] &quot;log2FC.cov&quot;         &quot;proportion&quot;         &quot;design&quot;            
+##  [7] &quot;df&quot;                 &quot;weight&quot;             &quot;y&quot;                 
+## [10] &quot;p.contamDE.lm.test&quot;</code></pre>
+<p>The corresponding p-values for the first 6 genes are</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(d1<span class="op">$</span>p.contamDE.lm.test)</code></pre></div>
+<pre><code>## [1] 0.026225152 0.047547248 0.446028908 0.001783601 0.032940366 0.027460809</code></pre>
+</div>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

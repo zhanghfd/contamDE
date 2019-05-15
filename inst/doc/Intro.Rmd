@@ -1,0 +1,239 @@
+---
+title: "Introduction to contamDE"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to contamDE}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# 1. Package description
+The R package __contamDE__ implements two powerful statistical methods (i.e., _contamDE_ and _contamDE-lm_) for differential expression analysis using next-generation RNA-seq data from contaminated tumor samples, which account for the contamination of the tumor samples. 
+
+# 2 The first  method _contamDE_
+
+## 2.1 Description of _contamDE_
+
+This method can analyze both contaminated matched data with a single or multiple tumor cell types and unmatched data based on negative binomial model. 
+
+In the matched situation, the data for each normal-tumor matched samples are $(N_{ij},T_{ij})$, where $N_{ij}$ and $T_{ij}$ are the numbers of the RNA-seq reads mapped to the $j$th gene for the $i$th normal and tumor cell sample respectively. Suppose tumor cell sample consists of a proportion of $w_i$ tumor cells and a proportion of $1-w_i$ normal cells, then the model for contaminated and matched samples with a common dispersion $\phi_j$ and mean parameter of normal samples $\mu_j$ is as follows:
+\begin{eqnarray*}
+&&N_{ij} \sim NB(\kappa_i\mu_je^{\alpha_{ij}},\phi_j),\\
+&&T_{ij} \sim NB(\kappa'_i(\mu_j+w_i\delta_j)e^{\alpha_{ij}},\phi_j),
+\end{eqnarray*}
+where $\kappa_i$ and $\kappa'_i$ are size factors for normal and tumor samples; $\alpha_{ij}$ are the fixed effects used to model the correlation between the $i$th paired sample; $\delta_j$ is the mean expression difference between tumors and normals which corresponds to $\delta_j=\mu'_j-\mu_j$ respectively.
+
+The likelihood ratio test can be conducted for testing null hypotheses $H_j:\delta_j=0$ and the fold change can be estimated according to the relationship
+\begin{eqnarray*}
+&& FC_j=\hat{\delta}_j/\hat{\mu}_j+1
+\end{eqnarray*}
+
+In the unmatched situation, the model is slightly simpler:
+\begin{eqnarray*}
+&&N_{ij} \sim NB(\kappa_i\mu_j,\phi_j),\\
+&&T_{i'j} \sim NB(\kappa'_{i'}(\mu_j+w_i\delta_j),\phi_j).
+\end{eqnarray*}
+
+
+## 2.2 Illustration of _contamDE_ 
+
+### 2.2.1 Matched samples
+
+We use the dataset _prostate_ contained for illustration. 
+
+```{r}
+data("prostate",package="contamDE")
+dim(prostate)
+```
+
+```{r}
+head(prostate)
+```
+This dataset contains the read counts of 12699 genes for prostate cancer samples and adjacent normal cells samples provided by 14 patients from Shanghai Changhai Hospital. Suppose we are interested in the differential expression of genes between two matched samples. 
+
+The R script for analyzing the data is as follows:
+
+```{r,eval=FALSE}
+d <- contamDE(prostate[,-1],R=2,match=TRUE)
+```
+
+The result is a list containing the following elements:
+```{r,eval=FALSE}
+names(d)
+```
+```{r,eval=FALSE}
+## [1] "W"  "LR"
+```
+
+The estimated purity proportion (saled to have mean 1) are
+```{r,eval=FALSE}
+d$W
+```
+
+```{r,eval=FALSE}
+## [1] 1.3078678 0.8623965 1.0131880 1.0174180 1.2064407 0.5894919 1.1149573 
+## [2] 0.9509469 1.1295711 1.2578447 0.7663290 0.6022404 1.2513781 0.9299297
+```
+
+The DE analysis results for the first 6 genes
+```{r,eval=FALSE}
+head(d$LR)
+```
+```{r,eval=FALSE}
+##             lrt      p.value      logFC
+## [1,] 21.8686383 2.919668e-06 -1.7268079
+## [2,]  2.4070003 1.207936e-01 -0.8302164
+## [3,]  2.7050280 1.000323e-01 -0.6706763
+## [4,]  0.1693806 6.806629e-01 -0.3048375
+## [5,]  9.3975734 2.172728e-03 -1.2926252
+## [6,] 16.7616779 4.238062e-05 -1.5243291
+```
+
+### 2.3.2 Unmatched samples
+
+We use dataset _drosophila_ for illustration. 
+```{r}
+data("drosophila",package="contamDE")
+dim(drosophila)
+head(drosophila)
+```
+This dataset consists of the RNA-seq read counts of 7196 genes for 7 unmatched samples of Drosphila melanogaster S2 cells, of which 4 samples were untreated while 3 samples were treated. The R script for analyzing the data is as follows:
+```{r eval=FALSE}
+d <- contamDE(drosophila[,-1],R=2,n=list(1:4,5:7),match=FALSE)
+```
+The estimated purity proportions (scaled to have maximal value 1) are 
+```{r,eval=FALSE}
+d$W
+```
+```{r,eval=FALSE}
+## [1] 0.9743470 0.9818007 1.0438522
+```
+The DE analysis resutls for the first 6 genes are as follows:
+```{r,eval=FALSE}
+##               lrt      p.value        logFC
+## [1,] 2.177926e-05 0.9962764259  0.001030783
+## [2,] 1.959686e+00 0.1615468840 -0.256221146
+## [3,] 2.335351e-01 0.6289148683 -0.085454006
+## [4,] 2.098455e-01 0.6468885017 -0.087014070
+## [5,] 1.495160e+00 0.2214175509  0.242913855
+## [6,] 1.284316e+01 0.0003387145  0.618098952
+```
+
+# 3. The second method _contamDE_lm_
+
+## 3.1 Description of _contamDE-lm_
+This method is also developed for DE analysis using RNA-seq data from contaminated tumor samples. This DE analysis procedure is based on a novel linear model and allows for pair-specific residual variances. Compared with _contamDE_, _contamDE-lm_ is computationally much faster and statistically more robust, especially when the pair number is large, and it can additionally incorporate covariates.
+
+The data for each normal-tumor matched samples are $(T_{ig},N_{ig})$, where $T_{ig}$ and $N_{ig}$ are the read counts of the $g$th gene for the $i$th normal sample and tumor cell sample, respectively. The novel linear model is specified as follows:
+\begin{eqnarray*}
+&& y_{ig}=\log(\frac{T_{ig}}{\kappa_{iT}}+1)-\log(\frac{N_{ig}}{\kappa_{iN}}+1)=w_i(x_i^T\beta_g+z_i^T\gamma_g)+e_{ig}
+\end{eqnarray*}
+where $y_{ig}$ is a measure of expression difference between the tumor sample and the adjacent normal sample; $\kappa_{iT}$ and $\kappa_{iN}$ are the size factors of tumor and normal samples, respectively; $x_i$ is a 0-1 valued vector charactering tumor subtype; $z_i$ is a q-vector of covariates; $\beta_g$ are the log2-fold changes between tumor tissues and the normal; $\gamma_g$ are regression parameters for covariates; and $w_i$ are purity proportions.
+
+Various DE analysis problems can be conducted by specifying linear null hypotheses of the form $H_0:H\beta_g=b$. For example, when detecting differentially expressed genes (DEGs) between the tumor and the normal, we ignore the subtype information (if any) and the hypothesis test problem can be formulated as $H_0:\beta_g=0$ which corresponds to $H = 1$; when detecting DEGs between tumor subtype 1 and tumor subtype 2, we formulate the null hypothesis as $H_0:\beta_{g1}=\beta_{g2}$ which corresponds to $H=(1,-1,0,\cdots,0)$; when detecting DEGs between any tumor subtype and the normal, we formulate the null hypothesis as $H_0:\beta_{g1}=\cdots=\beta_{gp}=0$ where $p$ is the subtype number, which corresponds to $H=I_p$. In any of these examples, $b=0$.
+
+The F test statistic for $H_0:H\beta_g=b$ is 
+\begin{eqnarray*}
+&& F_g=(H\hat{\theta}_g-b)^T(H\hat{\Sigma}_gH^T)^{-1}(H\hat{\theta}_g-b)/r
+\end{eqnarray*}
+which approximately follows the F-distribution with degrees of freedom $r$ and $d_0+d_g$ under $H_0$.
+Note that any two-sided t-test is equivalent to a F-test with the first degree of freedom being one. 
+
+## 3.2 Illustration of _contamDE.lm_
+
+We use dataset _simcounts_ for illustration.
+```{r,echo=FALSE}
+library(contamDE)
+```
+```{r message=FALSE, warning=FALSE}
+data("simcounts")
+dim(simcounts)
+head(simcounts)
+```
+
+The dataset contains simulated RNA-Seq read counts for eight patients with both normal and tumor samples. The eight patients belong to three tumor subtypes (four 'Type1' patients, two 'Type2' patients, and two 'Type3' patients).
+
+### 3.2.1 Without incorporating subtype information
+
+Suppose we are interested in differential analysis between the contaminated tumor samples and normal samples, then t-tests can be carried out:
+```{r message=FALSE, warning=FALSE}
+d <- contamDE.lm(simcounts)
+```
+The result is a list containing the following elements:
+```{r}
+names(d)
+```
+
+The correspong p-values for the first 6 genes are  
+```{r}
+head(d$p.contamDE.lm)
+```
+The estimated purity proportions (scaled to have maximal value 1) are
+```{r}
+d$proportion
+```
+
+The log2FCs (the log2 of fold changes) between two conditions (tumor and normal) are
+```{r}
+head(d$log2FC)
+```
+
+### 3.2.2  Incorporating subtype information
+
+The R scripts for DE analysis between any of three subtypes and the normal are as follows: 
+
+```{r}
+subtype <- c(rep("Type1",4),rep("Type2",2),rep("Type3",2))
+d <- contamDE.lm(simcounts,subtype)
+names(d)
+```
+The corresponding p-values for the first 6 genes are
+```{r}
+head(d$p.contamDE.lm)
+```
+The estimated purity proportions (scaled to have maximal value 1) are
+```{r}
+d$proportion
+```
+The estimated log2FCs for the first 6 genes are
+```{r}
+head(d$log2FC)
+```
+
+### 3.2.3 Linear hypothesis testing 
+
+The function _contamDE.lm.test_ can be used to test linear hypotheses.
+
+The syntax of _contamDE.lm.test_ is
+```{r,eval=FALSE}
+contamDE.lm.test(d,H,b=NULL)
+```
+where _d_ is a list returned by the function _contamDE.lm_, _H_  is a r x (p+q) design matrix of rank r and _b_ is a p vector.
+
+Example 1. If we have three subtypes and we are interested in DE analysis between these subtypes and the normal, the $H$ can be specified as a diagonal matrix:
+```{r}
+H <- diag(3)
+H
+```
+
+Example 2. If we are interested DE analysis between the first two subtyps, then $H$ is 
+```{r}
+H <- matrix(c(1,-1,0),1,3);
+H
+```
+
+The R scripts for exmple 1 are
+```{r message=FALSE, warning=FALSE}
+subtype <- c(rep("Type1",4),rep("Type2",2),rep("Type3",2))
+d <- contamDE.lm(simcounts,subtype)
+H <- diag(3)
+d1 <- contamDE.lm.test(d,H)
+```
+The result is a list containing the following elements:
+```{r}
+names(d1)
+```
+The corresponding p-values for the first 6 genes are
+```{r}
+head(d1$p.contamDE.lm.test)
+```  
