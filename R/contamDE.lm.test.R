@@ -16,7 +16,7 @@ contamDE.lm.test <-
    }
    F.stat <-rep(0, G)
    for (g in 1:G){
-    thetaghat <- as.matrix(abs(d$log2FC)[g,]);
+    thetaghat <- as.matrix(d$log2FC[g,]);
     v.covghat <- matrix(d$log2FC.cov[g,],3,3);
     F.stat[g] <- t(H %*% thetaghat-b)%*%solve(H %*% v.covghat %*% t(H))%*%(H %*% thetaghat-b)/r
    }
