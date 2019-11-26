@@ -30,8 +30,8 @@ function(counts, subtype=NULL, covariate=NULL, is.contaminated=TRUE, robust = TR
     if(is.null(covariate)){
       design <- model.matrix(~ 0 + subtype)
     } else {
-      covariate <- matrix(covariate, nrow = N)
-      design <- model.matrix(~ 0 + subtype + covariate)
+      covariate0 <- matrix(covariate, nrow = N)
+      design <- model.matrix(~ 0 + subtype + covariate0)
     }
   }
 

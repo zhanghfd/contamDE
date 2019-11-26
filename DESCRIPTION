@@ -13,5 +13,5 @@ Depends: R (>= 2.10)
 RoxygenNote: 6.1.1
 Suggests: knitr, rmarkdown
 VignetteBuilder: knitr
-URL: http://github.com/zhanghfd/contamDE
-BugReports: http://github.com/zhanghfd/contamDE/issues
+URL: http://github.com/zhanghustc/contamDE
+BugReports: http://github.com/zhanghustc/contamDE/issues

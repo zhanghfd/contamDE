@@ -4,7 +4,7 @@ The R package ‘contamDE’ conducts differential expression (DE) analysis usin
 
 Installation of the R package ‘contamDE’ in R:
 
-> devtools::install_github('zhanghfd/contamDE');
+> devtools::install_github('zhanghustc/contamDE');
 
 SHEN Qi, HU Jiyuan, JIANG Ning, HU Xiaohua, LUO Zewei, and ZHANG Hong (2016) contamDE: Differential expression analysis of RNA-seq data for contaminated tumor samples. Bioinformatics 32(5): 705-712.
 
