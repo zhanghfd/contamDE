@@ -3,7 +3,7 @@ Type: Package
 Title: DE analysis using RNA-seq data from contaminated tumor samples
 Version: 2.0
 Author: Qi Shen, Jiyuan Hu, Yifan Ji, Hong Zhang
-Maintainer: Hong Zhang <zhangh@ustc.edu.cn>
+Maintainer: Hong Zhang <zhanghfd@fudan.edu.cn>
 Description: contamDE is an R package for identifying differentially expressed genes using RNA-seq data from contaminated tumor samples.
 License: GPL (>= 2)
 Encoding: UTF-8
